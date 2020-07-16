@@ -1,78 +1,46 @@
-// AH query to check compliance of devices for required version of Log Analytics Agent (for Windows 7 and Windows 2008 R2) that support SHA-2
-
 // SHA2 Supported 64-bit versions
 
 // Version 10.20.18029 (March 2020)
-// SHA256 = 447287d8350f0287b3421916e9a8d479a617dd521da8eb2252390456ae87abc4
-// SHA1 = 3603f260d52c62962ed3ec902e0b7122585ecee9
+// File SHA1 = 3603f260d52c62962ed3ec902e0b7122585ecee9
 //
 // Version 10.20.18038 (April 2020)
-// SHA256 = 308afa6b29b7a1837d16e68746fec290750143f4d5c952852cbdc2c58fb878e4
-// SHA1 = c541f9d57c09c87ab4901c51602f6d466e09781f
+// File SHA1 = c541f9d57c09c87ab4901c51602f6d466e09781f
 //
 // Version 10.20.18040 (June 2020)
-// SHA256 = af834efe3378aa82dd2cba91d20af5b450dcafd785802c05447a7d7640a15b39
-// SHA1 = f621beaaacbcee09d5e2c037fe4b93145edf677e
+// File SHA1 = f621beaaacbcee09d5e2c037fe4b93145edf677e
 
 // SHA2 Supported 32-bit versions
 
 // Version 10.20.18049 (June 2020)
-// SHA256 = a61f184ffa20bffa7a7c133603551962541fff71b285a40bb5bc3ed1c66c1a0a
-// SHA1 = 9e2dcac6aeccd618304d373c3e2d5af0a9f59421
+// File SHA1 = 9e2dcac6aeccd618304d373c3e2d5af0a9f59421
 
-//List of 64-bit down-level devices and their 
 DeviceInfo
 | where Timestamp > ago (1d)
 | where OSVersion == "6.1"
-| where OSArchitecture == "x64"
 | join kind=inner (
     DeviceProcessEvents
     | where InitiatingProcessFileName == "MonitoringHost.exe"
-    //Please change the bellow comparison of SHA256 to != or ==, if you want to see Compliant only or Non-Compliant only
-    //| where InitiatingProcessSHA256 !in("af834efe3378aa82dd2cba91d20af5b450dcafd785802c05447a7d7640a15b39", "447287d8350f0287b3421916e9a8d479a617dd521da8eb2252390456ae87abc4", "308afa6b29b7a1837d16e68746fec290750143f4d5c952852cbdc2c58fb878e4")
-    | where InitiatingProcessSHA256 != ""
+    | where InitiatingProcessSHA1 != ""
     ) on DeviceId
-| extend Version=replace(@'0c5c7c2487d19247fc6516f1cb0549c478ba30b46116a87d9789e4bd024ad182', @'10.19.13515.0', InitiatingProcessSHA256) 	
-| extend Version=replace(@'af834efe3378aa82dd2cba91d20af5b450dcafd785802c05447a7d7640a15b39', @'[Compliant] 10.20.18040', Version)
-| extend Version=replace(@'447287d8350f0287b3421916e9a8d479a617dd521da8eb2252390456ae87abc4', @'[Compliant] 10.20.18029', Version)
-| extend Version=replace(@'308afa6b29b7a1837d16e68746fec290750143f4d5c952852cbdc2c58fb878e4', @'[Compliant] 10.20.18038', Version)
-| extend Version=replace(@'4b28e3d6cb23650a06dcd68704a56d57e8f28133368d2a42a2771e35f4ce9a3a', @'10.20.18018.0', Version)
-| extend Version=replace(@'cb06e1d5c09df125a09aef7200c9d1943ab4b8b83091fbb62c2f0557084b4c22', @'8.0.11136.0', Version)
-| extend Version=replace(@'9d152bb3f9a91cc67dd1c6f75296d8898775f2574e0f50612f94d65630e4343d', @'10.20.18001.0', Version)
-| extend Version=replace(@'4b28e3d6cb23650a06dcd68704a56d57e8f28133368d2a42a2771e35f4ce9a3a', @'10.20.18018.0', Version)
-| extend Version=replace(@'29a34a3e57db191a35daa5a9003127ea2328077b5afefb2398c330cbdc484b09', @'8.0.13053.0', Version)
-| extend Version=replace(@'af834efe3378aa82dd2cba91d20af5b450dcafd785802c05447a7d7640a15b39', @'10.20.18040.0', Version)
-| extend Version=replace(@'85cc989aa0b18e738c89c14554f741f38e92ab0fdf397ca7d9c103652b93cfbc', @'8.0.11103.0', Version)
-| extend Version=replace(@'cb06e1d5c09df125a09aef7200c9d1943ab4b8b83091fbb62c2f0557084b4c22', @'8.0.11136.0', Version)
-| extend Version=replace(@'ab8555c20b9cae9bed9b749fb469c220aef5d19236cdd99cbc6d3f9651771045', @'10.19.10006.0', Version)
-| extend Version=replace(@'eb91fa17523f4d1e7e68fdc827c33bb4cfe57e623c045c78eeb90281125f54cf', @'10.19.10014.0', Version)
-| extend Version=replace(@'8fe69aca92e6cb5a17b0fc2e20657e8164405caa1376f94a37dfe2b47f995cbc', @'10.20.18011.0', Version)
-| extend Version=replace(@'ab8555c20b9cae9bed9b749fb469c220aef5d19236cdd99cbc6d3f9651771045', @'10.19.10006.0', Version)
-| extend Version=replace(@'bb47fb124c28a01364423d5382f28d836ded1d10a556fd7d32e47cfce23de313', @'8.0.10918.0', Version)
-| extend Version=replace(@'b6c21230e79f003d0a7b815712236703a4a634f069b916c3466fef7c1c73dbcd', @'8.0.11081.0', Version)
-| extend Version=replace(@'0c5c7c2487d19247fc6516f1cb0549c478ba30b46116a87d9789e4bd024ad182', @'10.19.13515.0', Version)
-| extend Version=replace(@'25dc87920559da146acc16b983b77a16beb953e975c850d6b6f8474a86e527a7', @'8.0.11072.0', Version)
-| extend Version=replace(@'b6c21230e79f003d0a7b815712236703a4a634f069b916c3466fef7c1c73dbcd', @'8.0.11081.0', Version)
-| summarize arg_max(Version, *) by DeviceId
-| project DeviceName, Version
-
-//32-bit down-level devices not updated
-DeviceInfo
-| where Timestamp > ago (1d)
-| where OSVersion == "6.1"
-| where OSArchitecture == "x32"
-| join kind=inner (
-    DeviceProcessEvents
-    | where InitiatingProcessFileName == "MonitoringHost.exe"
-    //Please change the bellow comparison of SHA256 to != or ==, if you want to see Compliant only or Non-Compliant only
-    | where InitiatingProcessSHA256 != "a61f184ffa20bffa7a7c133603551962541fff71b285a40bb5bc3ed1c66c1a0a"
-    | where InitiatingProcessSHA256 != ""
-    ) on DeviceId
-| extend Version=replace(@'bebf3bc0b2ee5a062551f0db09f490da00e54bb84e6934a0b79c4fa4641e8632', @'8.0.11103.0', InitiatingProcessSHA256) 	
-| extend Version=replace(@'2021f71f05771766f41e1be94cc9dbf6126f265b487452d8750c55eb09c32efb', @'10.19.10006.0', Version)
-| extend Version=replace(@'9dbc31a46aa6c840ec903a8879a68333d507d9c257c462fb96bb35a2dd801d12', @'N/A', Version)
-| extend Version=replace(@'719f5ec02da5e5f1137af1a6c866b9e4f14ee2f8c8a0822ad8d890d8da89a3a0', @'8.0.13053.0', Version)
-| extend Version=replace(@'a61f184ffa20bffa7a7c133603551962541fff71b285a40bb5bc3ed1c66c1a0a', @'[Compliant] 10.20.18049', Version)
-| extend Version=replace(@'24fce9be30a085da9fac21bcf4399e709f24292ed66d3b2ba24ac1567686e922', @'8.0.11081.0', Version)
+| extend Version=replace(@'d97f5f336628d2d7c7a0860086aae8a7895fe09c', @'10.19.10006, Non-compliant', InitiatingProcessSHA1) 
+| extend Version=replace(@'ef6204ae26f2aab0fe3a89991a6c97b71a17f231', @'8.0.11136, Non-compliant', Version)
+| extend Version=replace(@'97d537c4015bc561eb4f2c70cdec0fbab41dec5f', @'8.0.11103, Non-compliant', Version)
+| extend Version=replace(@'9e2dcac6aeccd618304d373c3e2d5af0a9f59421', @'10.20.18049, Compliant', Version)
+| extend Version=replace(@'227fffb434c6f1f10614b12a3139ed51c492dcb6', @'8.0.13053, Non-compliant', Version)
+| extend Version=replace(@'651ebf94d7c6120bd45a917a06a391e53534993e', @'8.0.11136, Non-compliant', Version)
+| extend Version=replace(@'9eab7e74fe1d8dbd4346a1d7566df0c4b8521613', @'8.0.11103, Non-compliant', Version)
+| extend Version=replace(@'ec7da62769bb05b7fbc15c67601813cf053dcff1', @'10.20.18011, Non-compliant', Version)
+| extend Version=replace(@'113ef00207692c8f9c575f14c3109a78a7dbe6b8', @'10.20.18018, Non-compliant', Version)
+| extend Version=replace(@'3b57539cb6fcfdaf7e10eee46240a404df1fb1ab', @'10.20.18001, Non-compliant', Version)
+| extend Version=replace(@'f621beaaacbcee09d5e2c037fe4b93145edf677e', @'10.20.18040, Compliant', Version)
+| extend Version=replace(@'c541f9d57c09c87ab4901c51602f6d466e09781f', @'10.20.18038, Compliant', Version)
+| extend Version=replace(@'3603f260d52c62962ed3ec902e0b7122585ecee9', @'10.20.18029, Compliant', Version)
+| extend Version=replace(@'05e5a781b55265ad5a55c8e84b8142bd9c56e1bd', @'10.19.10006, Non-compliant', Version)
+| extend Version=replace(@'25158c85889aecf3406fef741b08a64ca3b39073', @'10.19.13515, Non-compliant', Version)
+| extend Version=replace(@'a499b163138e882b6440f0a31b36e7ffaf515597', @'10.19.10014, Non-compliant', Version)
+| extend Version=replace(@'6d455aad1244c2d38b5257912756a1570d927516', @'8.0.13053, Non-compliant', Version)
+| extend Version=replace(@'3cfead2c7c204f481d60f13332bd7f9addf74c34', @'8.0.10918, Non-compliant', Version)
+| extend Version=replace(@'ddbe499dfa696a5a2bbf46248fff5e0c98df9e01', @'8.0.11081, Non-compliant', Version)
+| extend Version=replace(@'d6c7667df1e099dfcd2d5739c56c3481f7b4fbf1', @'8.0.11072, Non-compliant', Version)
 | summarize arg_max(Version, *) by DeviceId
 | project DeviceName, Version
