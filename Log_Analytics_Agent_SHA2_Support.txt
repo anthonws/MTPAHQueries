@@ -19,6 +19,7 @@ DeviceInfo
 | where OSVersion == "6.1"
 | join kind=inner (
     DeviceProcessEvents
+    | where Timestamp > ago (1d)
     | where InitiatingProcessFileName == "MonitoringHost.exe"
     | where InitiatingProcessSHA1 != ""
     ) on DeviceId
