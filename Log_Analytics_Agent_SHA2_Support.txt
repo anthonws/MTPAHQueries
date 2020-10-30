@@ -50,7 +50,7 @@ DeviceInfo
 | extend Version=replace(@'3cfead2c7c204f481d60f13332bd7f9addf74c34', @'8.0.10918, Non-compliant', Version)
 | extend Version=replace(@'ddbe499dfa696a5a2bbf46248fff5e0c98df9e01', @'8.0.11081, Non-compliant', Version)
 | extend Version=replace(@'d6c7667df1e099dfcd2d5739c56c3481f7b4fbf1', @'8.0.11072, Non-compliant', Version)
-| extend Version=replace(@'b2dd6f7c38e08344dc8ffa44f4ce8c29e4dc6d9f), @'10.20.18053, Compliant', Version)
-| extend Version=replace(@'63441491ba3709d55b8801265d898edda38bfcae), @'10.20.18053, Compliant', Version)
+| extend Version=replace(@'b2dd6f7c38e08344dc8ffa44f4ce8c29e4dc6d9f', @'10.20.18053, Compliant', Version)
+| extend Version=replace(@'63441491ba3709d55b8801265d898edda38bfcae', @'10.20.18053, Compliant', Version)
 | summarize arg_max(Version, *) by DeviceId
 | project DeviceName, Version
